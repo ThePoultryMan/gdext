@@ -134,9 +134,9 @@ pub fn transform_inherent_impl(
     )?;
 
     #[cfg(feature = "codegen-full")]
-    let rpc_registrations = crate::class::make_rpc_registrations_fn(&class_name, &funcs);
+    let (rpc_registrations, rpc_api) = crate::class::make_rpc_registrations(&class_name, &funcs);
     #[cfg(not(feature = "codegen-full"))]
-    let rpc_registrations = TokenStream::new();
+    let (rpc_registrations, rpc_api) = (TokenStream::new(), TokenStream::new());
 
     let method_registrations: Vec<TokenStream> = funcs
         .into_iter()
@@ -213,6 +213,7 @@ pub fn transform_inherent_impl(
             #fill_storage
             #class_registration
             #signal_symbol_types
+            #rpc_api
             #inherent_impl_docs
         };
 

@@ -24,6 +24,7 @@ mod passive_gd;
 mod raw_gd;
 mod traits;
 
+pub mod rpc;
 pub(crate) mod rtti;
 pub mod signal;
 
