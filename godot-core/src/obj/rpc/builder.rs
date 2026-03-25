@@ -7,6 +7,7 @@
 
 use crate::builtin::Variant;
 use crate::r#gen::classes::Node;
+use crate::meta::error::RpcError;
 use crate::obj::rpc::{GodotClass, UserRpcObject};
 use crate::obj::{Inherits, WithBaseField};
 
@@ -32,11 +33,11 @@ impl<'c, C> RpcBuilder<'c, C>
 where
     C: WithBaseField + Inherits<Node>,
 {
-    pub fn call(self) {
-        self.object.call_rpc(self.rpc_name, &self.arguments);
+    pub fn call(self) -> Result<(), RpcError> {
+        self.object.call_rpc(self.rpc_name, &self.arguments)
     }
 
-    pub fn call_id(self, id: i64) {
-        self.object.call_rpc_id(self.rpc_name, id, &self.arguments);
+    pub fn call_id(self, id: i64) -> Result<(), RpcError> {
+        self.object.call_rpc_id(self.rpc_name, id, &self.arguments)
     }
 }

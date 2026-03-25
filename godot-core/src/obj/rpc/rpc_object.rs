@@ -8,6 +8,7 @@
 use crate::builtin::Variant;
 use crate::r#gen::classes::Node;
 use crate::r#gen::virtuals::RefCounted::Gd;
+use crate::meta::error::RpcError;
 use crate::obj::{GodotClass, Inherits, WithBaseField};
 
 /// Represents an object that RPCs can be called on.
@@ -20,7 +21,6 @@ pub enum UserRpcObject<'c, C: GodotClass> {
     External(Gd<C>),
 }
 
-// TODO: forward errors from RPC dispatch
 impl<'c, C> UserRpcObject<'c, C>
 where
     C: WithBaseField + Inherits<Node>,
@@ -54,7 +54,6 @@ where
                 .expect("This is a bug, please report it.")
                 .rpc_id(id, name, args),
             UserRpcObject::External(mut gd) => gd.upcast_mut::<Node>().rpc_id(id, name, args),
-        };
         };
 
         match error.try_into() {
