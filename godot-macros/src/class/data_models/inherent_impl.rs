@@ -5,7 +5,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use proc_macro2::{Delimiter, Group, Ident, Span, TokenStream};
+use proc_macro2::{Delimiter, Group, Ident, Span, TokenStream, TokenTree};
 use quote::spanned::Spanned;
 use quote::{ToTokens, format_ident, quote};
 
@@ -287,6 +287,8 @@ fn process_godot_fns(
             );
         }
 
+        validate_no_references(function)?;
+
         match attr.ty {
             ItemAttrType::Func(func, rpc_info) => {
                 if rpc_info.is_some() && is_secondary_impl {
@@ -528,6 +530,37 @@ fn add_virtual_script_call(
     virtual_functions.push(early_bound_function);
 
     method_name_str
+}
+
+/// Validates that a function uses no reference types (`&T`, `&mut T`) in parameters or return type.
+///
+/// References cannot cross Godot FFI. Without this check, users get a confusing error, see <https://github.com/godot-rust/gdext/pull/1542>.
+fn validate_no_references(function: &venial::Function) -> ParseResult<()> {
+    for (param, _) in function.params.inner.iter() {
+        if let venial::FnParam::Typed(arg) = param
+            && let Some(TokenTree::Punct(p)) = arg.ty.tokens.first()
+            && p.as_char() == '&'
+        {
+            return bail!(
+                &arg.ty,
+                "#[func] does not support reference parameters \
+                (`&T` or `&mut T`); use a value type instead"
+            );
+        }
+    }
+
+    if let Some(ref ret_ty) = function.return_ty
+        && let Some(TokenTree::Punct(p)) = ret_ty.tokens.first()
+        && p.as_char() == '&'
+    {
+        return bail!(
+            ret_ty,
+            "#[func] does not support reference return types \
+            (`&T` or `&mut T`); use a value type instead"
+        );
+    }
+
+    Ok(())
 }
 
 /// Parses an entire item (`fn`, `const`) inside an `impl` block and returns a domain representation.
