@@ -10,10 +10,10 @@ use godot::builtin::{
     array, iarray, vdict,
 };
 use godot::classes::{Node, Resource};
-use godot::meta;
 use godot::meta::error::ConvertError;
-use godot::meta::{AsArg, CowArg, FromGodot, GodotConvert, ToGodot};
+use godot::meta::{AsArg, FromGodot, GodotConvert, ToGodot};
 use godot::obj::{Gd, NewAlloc};
+use godot::private::CowArg;
 
 use crate::framework::itest;
 
@@ -376,6 +376,8 @@ fn strings_as_arg() {
 
 #[itest]
 fn to_arg_helpers() {
+    use godot::meta;
+
     let i: i8 = 3;
     let mut ints = iarray![1, 2];
     ints.push(meta::ref_to_arg(&i));

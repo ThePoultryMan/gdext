@@ -253,32 +253,15 @@ pub mod init {
 
 /// Meta-information about Godot types, their properties and conversions between them.
 pub mod meta {
-    // Submodules.
-    // Derive macro (moved from `register`).
-    pub use godot_core::meta::ClassId;
-    #[doc(hidden)]
-    pub use godot_core::meta::arg_into_owned;
-    #[cfg(feature = "__trace")]
-    #[doc(hidden)]
-    pub use godot_core::meta::trace;
-    // Argument conversions that stay in flat `meta`.
-    pub use godot_core::meta::{AsArg, ObjectArg, ToArg, owned_into_arg, ref_to_arg};
-    // Hidden internal items for proc-macros and generated code.
-    #[doc(hidden)]
-    pub use godot_core::meta::{CallContext, Signature, ensure_func_bounds};
-    #[cfg(feature = "__trace")]
-    #[doc(hidden)]
-    pub use godot_core::meta::{CowArg, FfiArg};
-    // Type traits.
     pub use godot_core::meta::{
-        Element, GodotImmutable, GodotType, PackedElement, element_variant_type,
+        AsArg, ClassId, Element, EngineFromGodot, EngineToGodot, FromGodot, GodotConvert,
+        GodotImmutable, GodotType, ObjectArg, PackedElement, SignedRange, ToArg, ToGodot,
+        element_variant_type, owned_into_arg, ref_to_arg, wrapped,
     };
-    // Conversion traits.
-    pub use godot_core::meta::{EngineFromGodot, EngineToGodot, FromGodot, GodotConvert, ToGodot};
-    // Range utilities.
-    pub use godot_core::meta::{SignedRange, wrapped};
     #[doc(inline)]
     pub use godot_core::meta::{conv, error, inspect, shape};
+    // TODO(v0.6): this re-export prevents `godot::meta` from being a module alias `#[doc(inline)] pub use godot_core::meta`.
+    // If resolved by moving macro, search for "meta/index.html" (or just "index.html") and revert those links to `[...][crate::meta]`.
     pub use godot_macros::GodotConvert;
 }
 

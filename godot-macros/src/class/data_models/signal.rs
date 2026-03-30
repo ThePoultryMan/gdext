@@ -397,7 +397,7 @@ fn make_signal_individual_struct(details: &SignalDetails) -> TokenStream {
             pub fn emit(&mut self, #emit_params) {
                 use ::godot::meta::AsArg;
                 #(
-                    ::godot::meta::arg_into_owned!(infer #param_names);
+                    ::godot::private::arg_into_owned!(infer #param_names);
                     //let #param_names = #param_names.into_arg();
                 )*
 

@@ -14,9 +14,10 @@ use sys::GodotFfi;
 
 use crate::builtin::Variant;
 use crate::meta::error::{CallError, CallResult, ConvertError};
+use crate::meta::param_tuple::TupleFromGodot;
 use crate::meta::{
     EngineFromGodot, EngineToGodot, FromGodot, GodotConvert, GodotType, InParamTuple,
-    MethodParamOrReturnInfo, OutParamTuple, ParamTuple, ToGodot, TupleFromGodot,
+    MethodParamOrReturnInfo, OutParamTuple, ParamTuple, ToGodot,
 };
 use crate::obj::{GodotClass, ValidatedObject};
 

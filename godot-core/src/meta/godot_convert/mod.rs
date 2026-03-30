@@ -21,7 +21,7 @@ use crate::meta::{ArgPassing, GodotType, ToArg};
 /// [`GodotType`] is a stronger bound than [`GodotConvert`], since it expresses that a type is _directly_ representable
 /// in Godot (without intermediate "via"). Every `GodotType` also implements `GodotConvert` with `Via = Self`.
 ///
-/// Please read the [`godot::meta` module docs][crate::meta] for further information about conversions.
+/// Please read the [`godot::meta` module docs](index.html) for further information about conversions.
 ///
 /// # u64
 /// The type `u64` is **not** supported by `ToGodot` and `FromGodot` traits. You can thus not pass it in `#[func]` parameters/return types.
@@ -52,7 +52,7 @@ pub trait GodotConvert {
 ///
 /// Violating these assumptions is safe but will give unexpected results.
 ///
-/// Please read the [`godot::meta` module docs][crate::meta] for further information about conversions.
+/// Please read the [`godot::meta` module docs](index.html) for further information about conversions.
 ///
 /// This trait can be derived using the [`#[derive(GodotConvert)]`](../register/derive.GodotConvert.html) macro.
 #[diagnostic::on_unimplemented(
@@ -115,7 +115,7 @@ pub trait ToGodot: Sized + GodotConvert {
 ///
 /// Violating these assumptions is safe but will give unexpected results.
 ///
-/// Please read the [`godot::meta` module docs][crate::meta] for further information about conversions.
+/// Please read the [`godot::meta` module docs](index.html) for further information about conversions.
 ///
 /// This trait can be derived using the [`#[derive(GodotConvert)]`](../register/derive.GodotConvert.html) macro.
 #[diagnostic::on_unimplemented(

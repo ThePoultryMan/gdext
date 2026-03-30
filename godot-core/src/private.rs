@@ -13,7 +13,6 @@ use std::sync::atomic;
 use sys::Global;
 
 use crate::global::godot_error;
-use crate::meta::CallContext;
 use crate::meta::error::{CallError, CallResult};
 use crate::obj::Gd;
 use crate::registry::property::Var;
@@ -23,12 +22,14 @@ use crate::{classes, sys};
 // Public re-exports
 
 mod reexport_pub {
+    pub use crate::arg_into_owned;
     #[cfg(all(since_api = "4.3", feature = "register-docs"))]
     pub use crate::docs::{DocsItem, DocsPlugin, InherentImplDocs, StructDocs};
     pub use crate::r#gen::classes::class_macros;
     pub use crate::r#gen::virtuals; // virtual fn names, hashes, signatures
+    pub use crate::meta::private_reexport::*;
     #[cfg(feature = "trace")]
-    pub use crate::meta::trace;
+    pub use crate::meta::{CowArg, FfiArg, trace};
     pub use crate::obj::rtti::ObjectRtti;
     pub use crate::obj::signal::priv_re_export::*;
     pub use crate::registry::callbacks;

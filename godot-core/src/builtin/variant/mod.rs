@@ -30,7 +30,7 @@ mod impls;
 ///
 /// # Conversions
 ///
-/// For type conversions, please read the [`godot::meta` module docs][crate::meta].
+/// For type conversions, please read the [`godot::meta` module docs](../meta/index.html).
 ///
 /// # Godot docs
 ///
