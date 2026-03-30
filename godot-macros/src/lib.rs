@@ -1135,6 +1135,35 @@ pub fn derive_godot_class(input: TokenStream) -> TokenStream {
 ///
 /// A detailed explanation with examples is available in the [book chapter _Registering signals_](https://godot-rust.github.io/book/register/signals.html).
 ///
+/// ## Internal signals
+///
+/// To hide a signal from the Godot editor (docs, autocomplete, signal connection dialog), use `#[signal(internal)]`.
+/// The signal is then registered under a `_`-prefixed name in Godot, while the Rust API still uses the original name.
+///
+/// ```no_run
+/// # use godot::prelude::*;
+/// # #[derive(GodotClass)]
+/// # #[class(init)]
+/// # struct MyClass {
+/// #     base: Base<RefCounted>,
+/// # }
+/// #[godot_api]
+/// impl MyClass {
+///     #[signal(internal)]
+///     fn hidden_signal(value: i64);
+///
+///     #[func]
+///     fn usage_example(&mut self) {
+///         self.signals().hidden_signal().emit(123);
+///
+///         // Untyped API uses Godot name, with `_` prefix:
+///         self.base_mut().emit_signal("_hidden_signal", vslice![123]);
+///     }
+/// }
+/// ```
+///
+/// This is consistent with `#[class(internal)]` for hiding classes.
+///
 /// [`WithSignals`]: ../obj/trait.WithSignals.html
 /// [`TypedSignal`]: ../register/struct.TypedSignal.html
 ///
@@ -1206,7 +1235,8 @@ pub fn derive_godot_class(input: TokenStream) -> TokenStream {
     alias = "signal",
     alias = "constant",
     alias = "rename",
-    alias = "secondary"
+    alias = "secondary",
+    alias = "internal"
 )]
 #[proc_macro_attribute]
 pub fn godot_api(meta: TokenStream, input: TokenStream) -> TokenStream {

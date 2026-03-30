@@ -64,6 +64,7 @@ struct FuncAttr {
 #[derive(Default)]
 struct SignalAttr {
     pub no_builder: bool,
+    pub internal: bool,
 }
 
 pub(crate) struct InherentImplAttr {
@@ -375,6 +376,7 @@ fn process_godot_fns(
                     fn_signature,
                     external_attributes,
                     has_builder: !signal.no_builder,
+                    is_internal: signal.internal,
                 });
 
                 removed_indexes.push(index);
@@ -728,10 +730,14 @@ fn parse_signal_attr(
 
     // Private #[signal(__no_builder)]
     let no_builder = parser.handle_alone("__no_builder")?;
+    let internal = parser.handle_alone("internal")?;
 
     parser.finish()?;
 
-    let signal_attr = SignalAttr { no_builder };
+    let signal_attr = SignalAttr {
+        no_builder,
+        internal,
+    };
 
     Ok(AttrParseResult::Signal(signal_attr, attr.value.clone()))
 }
