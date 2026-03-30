@@ -55,6 +55,13 @@ mod uniform_object_deref;
 
 pub(crate) mod sealed;
 
+/// Re-exports for proc-macros and generated code. Not part of the public API.
+#[doc(hidden)]
+pub mod private_reexport {
+    pub use super::param_tuple::TupleFromGodot;
+    pub use super::signature::{CallContext, Signature, ensure_func_bounds};
+}
+
 pub mod conv;
 pub mod error;
 pub mod inspect;
@@ -66,18 +73,20 @@ pub use args::*;
 pub use class_id::ClassId;
 pub use godot_convert::{EngineFromGodot, EngineToGodot, FromGodot, GodotConvert, ToGodot};
 pub use object_to_owned::ObjectToOwned;
-pub use param_tuple::{InParamTuple, OutParamTuple, ParamTuple, TupleFromGodot};
+pub(crate) use param_tuple::TupleFromGodot;
+pub use param_tuple::{InParamTuple, OutParamTuple, ParamTuple};
 pub use raw_ptr::{FfiRawPointer, RawPtr};
 #[cfg(feature = "trace")]
 pub use signature::trace;
-#[doc(hidden)]
-pub use signature::*;
+pub(crate) use signature::{CallContext, Signature, varcall_return_checked};
 pub use signed_range::{SignedRange, wrapped};
 pub use traits::{Element, GodotImmutable, GodotType, PackedElement, element_variant_type};
 pub use uniform_object_deref::UniformObjectDeref;
 
 // Macro re-exports (used as `meta::arg_into_owned!` etc.).
+#[doc(hidden)]
 pub use crate::arg_into_owned;
+#[doc(hidden)]
 pub use crate::arg_into_ref;
 
 // Crate-local re-exports.

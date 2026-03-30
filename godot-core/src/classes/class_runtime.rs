@@ -23,7 +23,7 @@ mod strict {
 
 #[cfg(safeguards_balanced)]
 mod balanced {
-    pub use crate::meta::CallContext;
+    pub(crate) use crate::meta::CallContext;
 }
 
 #[cfg(safeguards_balanced)]

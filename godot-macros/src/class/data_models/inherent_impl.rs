@@ -506,7 +506,7 @@ fn add_virtual_script_call(
             type CallRet = #call_ret;
             let args = (#( #arg_names, )*);
             unsafe {
-                ::godot::meta::Signature::<CallParams, CallRet>::out_script_virtual_call(
+                ::godot::private::Signature::<CallParams, CallRet>::out_script_virtual_call(
                     #class_name_str,
                     #method_name_str,
                     method_sname_ptr,
