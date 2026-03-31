@@ -1049,6 +1049,7 @@ pub fn derive_godot_class(input: TokenStream) -> TokenStream {
 ///         ..Default::default() // only possible in fn, not in const.
 ///     }
 /// }
+/// # fn main() {}
 /// ```
 ///
 // Note: for some reason, the intra-doc links don't work here, despite dev-dependency on godot.
