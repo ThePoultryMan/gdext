@@ -47,19 +47,13 @@ func _ready():
 		load("res://InheritTests.gd").new(),
 		load("res://ScriptInstanceTests.gd").new(),
 	]
-	
-	var gdscript_tests: Array = []
-	for suite in gdscript_suites:
-		for method in suite.get_method_list():
-			var method_name: String = method.name
-			if method_name.begins_with("test_"):
-				gdscript_tests.push_back(GDScriptExecutableTestCase.new(suite, method_name))
 
 	var special_case_test_suites: Array = [
 		load("res://SpecialTests.gd").new(),
 	]
 
-	for suite in special_case_test_suites:
+	var gdscript_tests: Array = []
+	for suite in gdscript_suites + special_case_test_suites:
 		for method in suite.get_method_list():
 			var method_name: String = method.name
 			if method_name.begins_with("test_"):
