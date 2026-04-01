@@ -567,8 +567,7 @@ pub trait ArgPassing: Sealed {
     #[doc(hidden)]
     fn ref_to_ffi<T>(value: &T) -> Self::FfiOutput<'_, T::Via>
     where
-        T: EngineToGodot<Pass = Self>,
-        T::Via: GodotType;
+        T: EngineToGodot<Pass = Self>;
 
     /// Convert to `Variant` in the most efficient way (move or borrow).
     #[doc(hidden)]
@@ -604,7 +603,6 @@ impl ArgPassing for ByValue {
     fn ref_to_ffi<T>(value: &T) -> Self::FfiOutput<'_, T::Via>
     where
         T: EngineToGodot<Pass = Self>,
-        T::Via: GodotType,
     {
         // For ByValue: engine_to_godot() returns owned T::Via, move directly to FFI.
         GodotType::into_ffi(value.engine_to_godot())
@@ -635,7 +633,6 @@ impl ArgPassing for ByRef {
     fn ref_to_ffi<T>(value: &T) -> <T::Via as GodotType>::ToFfi<'_>
     where
         T: EngineToGodot<Pass = Self>,
-        T::Via: GodotType,
     {
         // Use by-ref conversion if possible, avoiding unnecessary clones when passing to FFI.
         GodotType::to_ffi(value.engine_to_godot())
@@ -668,7 +665,6 @@ impl ArgPassing for ByVariant {
     fn ref_to_ffi<T>(value: &T) -> <T::Via as GodotType>::ToFfi<'_>
     where
         T: EngineToGodot<Pass = Self>,
-        T::Via: GodotType,
     {
         GodotType::to_ffi(value.engine_to_godot())
     }
@@ -700,7 +696,6 @@ impl ArgPassing for ByObject {
     fn ref_to_ffi<T>(value: &T) -> ObjectArg<'_>
     where
         T: EngineToGodot<Pass = Self>,
-        T::Via: GodotType,
     {
         let obj_ref: &T::Via = value.engine_to_godot(); // implements GodotType.
         obj_ref.as_object_arg()
