@@ -15,7 +15,9 @@ use sys::{SysPtr as _, static_assert_eq_size_align};
 use crate::builtin::{Callable, NodePath, StringName, Variant};
 use crate::meta::error::{ConvertError, FromFfiError};
 use crate::meta::shape::GodotShape;
-use crate::meta::{AsArg, ClassId, Element, FromGodot, GodotConvert, GodotType, RefArg, ToGodot};
+use crate::meta::{
+    AsArg, ClassId, Element, FromGodot, GodotConvert, GodotNullableType, GodotType, RefArg, ToGodot,
+};
 use crate::obj::{
     Bounds, DynGd, GdDerefTarget, GdMut, GdRef, GodotClass, Inherits, InstanceId, OnEditor, RawGd,
     WithBaseField, WithSignals, bounds, cap,
@@ -1028,6 +1030,23 @@ impl<T: GodotClass> GodotType for Gd<T> {
 }
 
 impl<T: GodotClass> Element for Gd<T> {}
+
+impl<T: GodotClass> GodotNullableType for Gd<T> {
+    fn ffi_null() -> RawGd<T> {
+        RawGd::null()
+    }
+
+    fn ffi_null_ref<'f>() -> RefArg<'f, RawGd<T>>
+    where
+        Self: 'f,
+    {
+        RefArg::null_ref()
+    }
+
+    fn ffi_is_null(ffi: &RawGd<T>) -> bool {
+        ffi.is_null()
+    }
+}
 
 impl<T: GodotClass> Element for Option<Gd<T>> {}
 

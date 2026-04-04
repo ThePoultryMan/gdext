@@ -73,12 +73,10 @@ pub use args::*;
 pub use class_id::ClassId;
 pub use godot_convert::{EngineFromGodot, EngineToGodot, FromGodot, GodotConvert, ToGodot};
 pub use object_to_owned::ObjectToOwned;
-pub(crate) use param_tuple::TupleFromGodot;
 pub use param_tuple::{InParamTuple, OutParamTuple, ParamTuple};
 pub use raw_ptr::{FfiRawPointer, RawPtr};
 #[cfg(feature = "trace")]
 pub use signature::trace;
-pub(crate) use signature::{CallContext, Signature, varcall_return_checked};
 pub use signed_range::{SignedRange, wrapped};
 pub use traits::{Element, GodotImmutable, GodotType, PackedElement, element_variant_type};
 pub use uniform_object_deref::UniformObjectDeref;
@@ -89,10 +87,12 @@ pub use crate::arg_into_owned;
 #[doc(hidden)]
 pub use crate::arg_into_ref;
 
-// Crate-local re-exports.
+// Crate-local re-exports. Done like this to prevent rustfmt from mixing with public export.
 mod reexport_crate {
+    pub(crate) use super::param_tuple::TupleFromGodot;
+    pub(crate) use super::signature::{CallContext, Signature, varcall_return_checked};
     pub(crate) use super::traits::{
-        ExtVariantType, GodotFfiVariant, GodotNullableFfi, ffi_variant_type,
+        ExtVariantType, GodotFfiVariant, GodotNullableType, ffi_variant_type,
     };
     pub(crate) use crate::impl_godot_as_self;
     // Private imports for this module only.

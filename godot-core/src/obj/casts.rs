@@ -8,8 +8,6 @@
 use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 
-use godot_ffi::GodotNullableFfi;
-
 use crate::obj::{GodotClass, RawGd};
 use crate::sys;
 

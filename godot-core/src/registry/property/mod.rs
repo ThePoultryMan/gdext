@@ -7,9 +7,7 @@
 
 //! Registration support for property types.
 
-use godot_ffi::GodotNullableFfi;
-
-use crate::meta::{ClassId, FromGodot, GodotConvert, GodotType, ToGodot};
+use crate::meta::{ClassId, FromGodot, GodotConvert, GodotNullableType, ToGodot};
 
 mod phantom_var;
 
@@ -132,7 +130,7 @@ pub trait Export: Var {
 
 /// Marker trait to identify `GodotType`s that can be directly used with an `#[export]`.
 ///
-/// Implemented pretty much for all [`GodotType`]s that are not [`GodotClass`][crate::obj::GodotClass]es.
+/// Implemented pretty much for all [`GodotType`][crate::meta::GodotType]s that are not [`GodotClass`][crate::obj::GodotClass]es.
 /// By itself, this trait has no implications for the [`Var`] or [`Export`] traits.
 ///
 /// Types which don't implement the `BuiltinExport` trait can't be used directly as an `#[export]`
@@ -309,12 +307,7 @@ where
 {
 }
 
-impl<T> BuiltinExport for Option<T>
-where
-    T: GodotType,
-    T::Ffi: GodotNullableFfi,
-{
-}
+impl<T: GodotNullableType> BuiltinExport for Option<T> {}
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // Export machinery

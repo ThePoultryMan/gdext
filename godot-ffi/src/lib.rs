@@ -104,9 +104,7 @@ pub use init_level::*;
 pub use string_cache::StringCache;
 pub use toolbox::*;
 
-pub use crate::godot_ffi::{
-    ExtVariantType, GodotFfi, GodotNullableFfi, PrimitiveConversionError, PtrcallType,
-};
+pub use crate::godot_ffi::{ExtVariantType, GodotFfi, PrimitiveConversionError, PtrcallType};
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // API to access Godot via FFI

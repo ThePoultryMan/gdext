@@ -9,7 +9,7 @@ use crate::builtin::{Array, Variant};
 use crate::meta;
 use crate::meta::error::{ConvertError, ErrorKind, FromFfiError};
 use crate::meta::shape::GodotShape;
-use crate::meta::{Element, FromGodot, GodotConvert, GodotNullableFfi, GodotType, ToGodot};
+use crate::meta::{Element, FromGodot, GodotConvert, GodotNullableType, GodotType, ToGodot};
 use crate::registry::info::ParamMetadata;
 
 // The following ToGodot/FromGodot/Convert impls are auto-generated for each engine type, co-located with their definitions:
@@ -19,26 +19,22 @@ use crate::registry::info::ParamMetadata;
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // Option<T>
 
-impl<T> GodotType for Option<T>
-where
-    T: GodotType,
-    T::Ffi: GodotNullableFfi,
-    for<'f> T::ToFfi<'f>: GodotNullableFfi,
-{
+impl<T: GodotNullableType> GodotType for Option<T> {
     type Ffi = T::Ffi;
-
     type ToFfi<'f> = T::ToFfi<'f>;
 
     fn to_ffi(&self) -> Self::ToFfi<'_> {
-        GodotNullableFfi::flatten_option(self.as_ref().map(|t| t.to_ffi()))
+        self.as_ref()
+            .map(|t| t.to_ffi())
+            .unwrap_or_else(T::ffi_null_ref)
     }
 
     fn into_ffi(self) -> Self::Ffi {
-        GodotNullableFfi::flatten_option(self.map(|t| t.into_ffi()))
+        self.map(|t| t.into_ffi()).unwrap_or_else(T::ffi_null)
     }
 
     fn try_from_ffi(ffi: Self::Ffi) -> Result<Self, ConvertError> {
-        if ffi.is_null() {
+        if T::ffi_is_null(&ffi) {
             return Ok(None);
         }
 
@@ -46,7 +42,7 @@ where
     }
 
     fn from_ffi(ffi: Self::Ffi) -> Self {
-        if ffi.is_null() {
+        if T::ffi_is_null(&ffi) {
             return None;
         }
 
@@ -89,11 +85,7 @@ where
     // Currently limited to holding objects -> needed to establish to_godot() relation T::to_godot() = Option<&T::Via>.
     T: ToGodot<Pass = meta::ByObject>,
     // T::Via must be a Godot nullable type (to support the None case).
-    for<'f> T::Via: GodotType<
-            // Associated types need to be nullable.
-            Ffi: GodotNullableFfi,
-            ToFfi<'f>: GodotNullableFfi,
-        >,
+    T::Via: GodotNullableType,
     // Previously used bound, not needed right now but don't remove: Option<T::Via>: GodotType,
 {
     // Basically ByRef, but allows Option<T> -> Option<&T::Via> conversion.

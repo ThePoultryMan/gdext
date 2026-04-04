@@ -8,7 +8,7 @@
 use std::{fmt, ptr};
 
 use godot_ffi as sys;
-use sys::{ExtVariantType, GodotFfi, GodotNullableFfi, PtrcallType, interface_fn};
+use sys::{ExtVariantType, GodotFfi, PtrcallType, interface_fn};
 
 use crate::builtin::{Variant, VariantType};
 #[cfg(safeguards_balanced)]
@@ -99,6 +99,15 @@ impl<T: GodotClass> RawGd<T> {
     /// This does not check if the object is dead. For that, use [`is_instance_valid()`](Self::is_instance_valid).
     pub(crate) fn is_null(&self) -> bool {
         self.obj.is_null() || self.cached_rtti.is_none()
+    }
+
+    /// Creates a null object pointer.
+    pub(crate) fn null() -> Self {
+        Self {
+            obj: ptr::null_mut(),
+            cached_rtti: None,
+            cached_storage_ptr: InstanceCache::null(),
+        }
     }
 
     pub(crate) fn instance_id_unchecked(&self) -> Option<InstanceId> {
@@ -720,21 +729,6 @@ impl<T: GodotClass> GodotFfiVariant for RawGd<T> {
             }
             .into_error(raw)
         })
-    }
-}
-
-impl<T: GodotClass> GodotNullableFfi for RawGd<T> {
-    /// Create a new object representing a null in Godot.
-    fn null() -> Self {
-        Self {
-            obj: ptr::null_mut(),
-            cached_rtti: None,
-            cached_storage_ptr: InstanceCache::null(),
-        }
-    }
-
-    fn is_null(&self) -> bool {
-        Self::is_null(self)
     }
 }
 

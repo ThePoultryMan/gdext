@@ -99,24 +99,6 @@ pub unsafe trait GodotFfi {
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 
-/// Types that can represent null-values.
-///
-/// Used to blanket implement various conversions over `Option<T>`.
-///
-/// This is currently only implemented for `RawGd`.
-// TODO: Consider implementing for `Variant`.
-pub trait GodotNullableFfi: Sized + GodotFfi {
-    fn null() -> Self;
-
-    fn is_null(&self) -> bool;
-
-    fn flatten_option(opt: Option<Self>) -> Self {
-        opt.unwrap_or_else(Self::null)
-    }
-}
-
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-
 /// Variant type that differentiates between `Variant` and `NIL` types.
 #[doc(hidden)]
 #[derive(Copy, Clone, Eq, PartialEq)]
